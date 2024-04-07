@@ -1,7 +1,7 @@
 import ky from 'ky'
 import { ResourceActions, createSignal } from 'solid-js'
 import { toast } from 'solid-toast'
-import { useRequest } from '~/signals'
+import { endpoint, useRequest } from '~/signals'
 import {
   BackendVersion,
   Config,
@@ -245,4 +245,17 @@ export const isUpdateAvailableAPI = async (versionResponse: string) => {
   }
 
   return false
+}
+
+export const fetchGeoIPAPI = (ip: string) => {
+  if (!ip) {
+    return "Unknown"
+  }
+  var request = new XMLHttpRequest();
+
+  request.open("GET", `/geoip/query?ip=${ip}`, false)
+  request.setRequestHeader('Authorization', `Bearer ${endpoint().secret}`)
+  request.send()
+  
+  return JSON.parse(request.responseText)
 }
